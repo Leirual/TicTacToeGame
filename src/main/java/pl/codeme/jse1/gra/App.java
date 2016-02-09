@@ -12,7 +12,7 @@ public class App { // deklaracja klasy
     /**
      * Tablica literałów cyfr
      */
-    static String[] tab = {"zero", "jeden", "dwa", "trzy", "cztery", "pięć", "ala", "siedem"};
+    static String[] tab = { "zero", "jeden", "dwa", "trzy", "cztery", "pięć", "ala", "siedem" };
 
     /**
      * Funkcja zamieniająca cyfrę na odpowiadający jej literał
