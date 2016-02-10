@@ -28,7 +28,15 @@ public class Honda extends Auto {
     /**
      * Nadpisana metoda symulujaca hamowanie
      */
+    @Override
     public void hamuje() {
         System.out.println("Hamuję hondą");
     }
+
+    @Override
+    public int jedzie() {
+        System.out.println("Jedzie hondą");
+        return predkosc;
+    }
+
 }

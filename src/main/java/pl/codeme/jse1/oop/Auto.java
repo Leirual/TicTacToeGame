@@ -6,7 +6,7 @@ package pl.codeme.jse1.oop;
  * @author pawel.apanasewicz@codeme.pl
  *
  */
-public class Auto {
+public abstract class Auto {
 
     /**
      * Pole statyczne nazwa producenta auta
@@ -36,7 +36,9 @@ public class Auto {
     /**
      * Pole reprezentujące maksymalną prędkość auta
      */
-    private int predkosc;
+    protected int predkosc;
+
+    private boolean czyZepsute;
 
     /**
      * Konstruktor klasy
@@ -51,6 +53,7 @@ public class Auto {
         this.masa = masa; // podstawienie pola w obiekcie
         maxBak = 70; // podstawienie pola w obiekcie
         this.oblicPredkosc(); // wywołanie metody w obiekcie
+        czyZepsute = false;
     }
 
     /**
@@ -87,24 +90,27 @@ public class Auto {
      * 
      * @return Pędkosć auta
      */
-    public int jedzie() {
-        System.out.println("jadę autem z prędkością " + predkosc);
-
-        return predkosc;
-    }
+    public abstract int jedzie();
 
     /**
      * Symulacja hamowania samochodu
      */
-    public void hamuje() {
-        System.out.println("hamuje autem");
-    }
+    public abstract void hamuje();
 
     /**
      * Symulacja naprawy auta
      */
     public void naprawiam() {
         System.out.println("naprawiam auto");
+        czyZepsute = false;
+    }
+
+    public void zepsuj() {
+        czyZepsute = true;
+    }
+
+    public boolean czyZepsute() {
+        return czyZepsute;
     }
 
 }

@@ -28,10 +28,16 @@ public class Ford extends Auto {
     /**
      * Nadpisana metoda symulujaca jazdę
      */
+    @Override
     public int jedzie() {
-        super.jedzie(); // wywołanie medody jedzie z klasy po której dziedziczymy
         System.out.println("Jadę Fordem");
 
-        return 100;
+        return predkosc;
     }
+
+    @Override
+    public void hamuje() {
+        System.out.println("Hamuje Fordem");
+    }
+
 }
