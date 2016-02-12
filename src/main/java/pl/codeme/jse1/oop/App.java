@@ -14,12 +14,14 @@ public class App {
      * @param args Parametry z linii komend
      */
     public static void main(String[] args) {
+        // malowanie na płutnie
         Plutno plutno = new Plutno();
         Kwadrat kwadrat = new Kwadrat();
         Trojkat trojkat = new Trojkat();
-        plutno.rysuje(kwadrat);
-        plutno.rysuje(trojkat);
+        plutno.rysuje(kwadrat); // namalowanie kwadratu
+        plutno.rysuje(trojkat); // namalowanie trojkąta
 
+        // sprawdzenie przekazania przez wartość
         int liczba = 1;
         int liczba2 = oblicz(liczba);
         System.out.println(liczba + " - " + liczba2);
@@ -38,14 +40,22 @@ public class App {
 
         App app = new App();
         Warsztat warsztat = app.new Warsztat(); // inicjalizacja obiektu typu Warsztat z subklasy
+        // sprawdzenie przekazania przez referencje
         Auto naprawione1 = warsztat.napraw(civic);
         Auto naprawione2 = warsztat.napraw(auto2);
         System.out.println(civic.czyZepsute() + " - " + naprawione1.czyZepsute());
         System.out.println(auto2.czyZepsute() + " - " + naprawione2.czyZepsute());
     }
 
+    /**
+     * Metoda zwiększa wartość parametru o 10
+     * 
+     * @param liczba Liczba do zwiększenia
+     * 
+     * @return Zwiekszony parametr o 10
+     */
     public static int oblicz(int liczba) {
-        return liczba += 10;
+        return liczba += 10; // zwiększenie liczby o 10
     }
 
     /**

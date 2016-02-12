@@ -105,10 +105,18 @@ public abstract class Auto {
         czyZepsute = false;
     }
 
+    /**
+     * Metoda psuje auto
+     */
     public void zepsuj() {
         czyZepsute = true;
     }
 
+    /**
+     * Metoda sprawdza czy auto jest zepsute
+     * 
+     * @return Czy zepsute
+     */
     public boolean czyZepsute() {
         return czyZepsute;
     }
