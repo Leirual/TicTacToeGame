@@ -59,13 +59,43 @@ public class Game {
      * 
      * @param message Wiadomość do gry
      * 
-     * @return
      */
-    public Message send(Message message) {
-        return null;
+    public void send(Message message) {
+        AvailableMessage msg;
+        if(message == null) {
+            msg = AvailableMessage.PLAYER;
+        } else {
+            msg = (AvailableMessage)message;
+        }
+        System.out.println("UI: " + msg);
+        switch(msg) {
+        case END:
+            break;
+        case ERROR:
+            break;
+        case LOAD:
+            break;
+        case NEW:
+            break;
+        case PLAYER:
+            if(msg.getText() != null) {
+                
+            }
+            msg.setText("Podaj imię gracza ");
+            break;
+        case SAVE:
+            break;
+        case TURN:
+            break;
+        default:
+            break;
+        }
+
+        uInterface.send(msg);
     }
 
     public void setInterface(UInterface uInterface) {
         this.uInterface = uInterface;
     }
+
 }
