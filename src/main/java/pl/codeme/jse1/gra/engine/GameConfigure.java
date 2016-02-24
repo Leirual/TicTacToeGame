@@ -23,7 +23,7 @@ public class GameConfigure extends Properties {
         this.setProperty("height", "3");
         this.setProperty("sign1", "O");
         this.setProperty("sign2", "X");
-        this.setProperty("first", "sign1");
+        this.setProperty("first", "1");
     }
 
 }

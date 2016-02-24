@@ -47,4 +47,8 @@ public enum Sign {
         return sign;
     }
 
+    public static Sign getSignByNumber(int number) {
+        return values()[number - 1];
+    }
+
 }

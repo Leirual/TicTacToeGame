@@ -2,6 +2,8 @@ package pl.codeme.jse1.gra.engine;
 
 import static pl.codeme.jse1.gra.engine.Sign.EMPTY;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -43,11 +45,47 @@ public class GameBoard {
      * Metoda czyszcząca planszę
      */
     public void clear() {
-        for(int y = 0; y < height; y++) {
-            for(int x = 0; x < width; x++) {
-                gameBoard.put(new Coordinate(y, x), EMPTY);
+        if(gameBoard == null) {
+            gameBoard = new HashMap<>();
+            for(int y = 0; y < height; y++) {
+                for(int x = 0; x < width; x++) {
+                    gameBoard.put(new Coordinate(y, x), EMPTY);
+                }
+            }
+        } else {
+            Iterator<Coordinate> keys = gameBoard.keySet().iterator();
+            while(keys.hasNext()) {
+                gameBoard.put(keys.next(), EMPTY);
             }
         }
+    }
+
+    public Map<Coordinate, Sign> getGameBoard() {
+        return gameBoard;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    private Coordinate findKey(Coordinate coord) {
+        Iterator<Coordinate> keys = gameBoard.keySet().iterator();
+        while(keys.hasNext()) {
+            Coordinate key = keys.next();
+            if(key.equals(coord)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    public void set(Coordinate coord, Sign sign) {
+        gameBoard.put(findKey(coord), sign);
     }
 
     /**
@@ -95,6 +133,23 @@ public class GameBoard {
          */
         public int getY() {
             return y;
+        }
+
+        public boolean equals(Object object) {
+            if(object instanceof Coordinate) {
+                Coordinate coord = (Coordinate)object;
+                if(coord.getX() == x && coord.getY() == y) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static Coordinate getCoordenateByText(String text) {
+            String[] textTab = text.split(",");
+
+            return new Coordinate(Integer.valueOf(textTab[0]), Integer.valueOf(textTab[1]));
         }
 
     }
