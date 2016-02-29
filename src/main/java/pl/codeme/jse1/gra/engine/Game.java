@@ -1,6 +1,7 @@
 package pl.codeme.jse1.gra.engine;
 
 import pl.codeme.jse1.gra.engine.GameBoard.Coordinate;
+import pl.codeme.jse1.gra.engine.GameBoard.GameState;
 import pl.codeme.jse1.gra.ui.UInterface;
 
 /**
@@ -103,10 +104,25 @@ public class Game {
         currentPlayer = players[currentPlayerIndex];
     }
 
-    private Message turn(Message msg) {
-        gameBoard.set(Coordinate.getCoordenateByText(msg.getText()), currentPlayer.getSign());
-        changePlayer();
-        msg.setText("Ruch gracza " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )");
+    private AvailableMessage turn(Message message) throws GameFieldNotEmptyException {
+        AvailableMessage msg = AvailableMessage.TURN;
+        GameState state = gameBoard.set(Coordinate.getCoordenateByText(message.getText()), currentPlayer.getSign());
+        System.out.println("Stan gry: " + state);
+        switch(state) {
+        case PAT:
+            msg = AvailableMessage.NEW;
+            msg.setText("Remis, aby grać dalej wcisnij enter");
+            break;
+        case RUN:
+            changePlayer();
+            msg.setText("Ruch gracza " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )");
+            msg.setGameBoardMap(gameBoard.getGameBoard());
+            break;
+        case WIN:
+            msg = AvailableMessage.NEW;
+            msg.setText("Wygrał gracz " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )!!!\n Aby kontynuować wciśnij enter.");
+            break;
+        }
         msg.setGameBoardMap(gameBoard.getGameBoard());
 
         return msg;
@@ -125,42 +141,52 @@ public class Game {
         } else {
             msg = (AvailableMessage)message;
         }
+
+        if(msg.equals(AvailableMessage.ERROR)) {
+            msg = (AvailableMessage)msg.getData();
+            msg.setText(AvailableMessage.ERROR.getText());
+        }
+
         System.out.println("UI: " + msg);
-        switch(msg) {
-        case END:
-            System.exit(0);
-            break;
-        case ERROR:
-            break;
-        case LOAD:
-            break;
-        case NEW:
-            gameBoard.clear();
-            msg = AvailableMessage.TURN;
-            msg.setText("Ruch gracza " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )");
-            msg.setGameBoardMap(gameBoard.getGameBoard());
-            break;
-        case PLAYER:
-            if(msg.getText() != null) {
-                setPlayer(msg.getText());
-            }
-            int playerNumber = getNextEmptyPlayer();
-            if(playerNumber > 0) {
-                msg.setText("Podaj imię gracza " + playerNumber);
-            } else {
+        try {
+            switch(msg) {
+            case END:
+                System.exit(0);
+                break;
+            case LOAD:
+                break;
+            case NEW:
+                gameBoard.clear();
                 msg = AvailableMessage.TURN;
-                currentPlayer = players[currentPlayerIndex];
                 msg.setText("Ruch gracza " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )");
                 msg.setGameBoardMap(gameBoard.getGameBoard());
+                break;
+            case PLAYER:
+                if(msg.getText() != null) {
+                    setPlayer(msg.getText());
+                }
+                int playerNumber = getNextEmptyPlayer();
+                if(playerNumber > 0) {
+                    msg.setText("Podaj imię gracza " + playerNumber);
+                } else {
+                    msg = AvailableMessage.TURN;
+                    currentPlayer = players[currentPlayerIndex];
+                    msg.setText("Ruch gracza " + currentPlayer.getName() + "( " + currentPlayer.getSign().getSign() + " )");
+                    msg.setGameBoardMap(gameBoard.getGameBoard());
+                }
+                break;
+            case SAVE:
+                break;
+            case TURN:
+                msg = turn(msg);
+                break;
+            default:
+                break;
             }
-            break;
-        case SAVE:
-            break;
-        case TURN:
-            turn(msg);
-            break;
-        default:
-            break;
+        } catch(GameFieldNotEmptyException e) {
+            msg = AvailableMessage.ERROR;
+            msg.setText(e.getMessage());
+            msg.setData(AvailableMessage.TURN);
         }
 
         uInterface.send(msg);

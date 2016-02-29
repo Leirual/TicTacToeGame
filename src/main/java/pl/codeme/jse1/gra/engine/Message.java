@@ -22,4 +22,8 @@ public interface Message {
 
     public Message getMessageByText(String text);
 
+    public void setData(Object data);
+
+    public Object getData();
+
 }

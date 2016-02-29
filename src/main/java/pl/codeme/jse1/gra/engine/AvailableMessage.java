@@ -9,6 +9,7 @@ public enum AvailableMessage implements Message {
 
     private String text;
     private Map<Coordinate, Sign> gameBoardMap;
+    private Object data;
 
     @Override
     public void setText(String text) {
@@ -39,6 +40,16 @@ public enum AvailableMessage implements Message {
         }
 
         return null;
+    }
+
+    @Override
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    @Override
+    public Object getData() {
+        return data;
     }
 
 }

@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class GameBoard {
 
+    public enum GameState { WIN, PAT, RUN }
+
     /**
      * Mapa przechowująca stan gry (ustawione znaki na polach)
      */
@@ -84,8 +86,82 @@ public class GameBoard {
         return null;
     }
 
-    public void set(Coordinate coord, Sign sign) {
-        gameBoard.put(findKey(coord), sign);
+    private boolean hasEmpty() {
+        Iterator<Coordinate> keys = gameBoard.keySet().iterator();
+        while(keys.hasNext()) {
+            if(gameBoard.get(keys.next()).equals(EMPTY)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private GameState check() {
+        GameState state = GameState.RUN;
+
+        if(!hasEmpty()) {
+            state = GameState.PAT;
+        }
+
+        if(
+            (
+                // poziomo
+                (
+                    !gameBoard.get(findKey(new Coordinate(0, 0))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(0, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(0, 2)))) 
+                ) || (
+                    !gameBoard.get(findKey(new Coordinate(1, 0))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(1, 0))).equals(gameBoard.get(findKey(new Coordinate(1, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(1, 0))).equals(gameBoard.get(findKey(new Coordinate(1, 2))))
+                ) || (
+                    !gameBoard.get(findKey(new Coordinate(2, 0))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(2, 0))).equals(gameBoard.get(findKey(new Coordinate(2, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(2, 0))).equals(gameBoard.get(findKey(new Coordinate(2, 2))))
+                )
+            ) || (
+                // pionowo
+                (
+                    !gameBoard.get(findKey(new Coordinate(0, 0))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(1, 0)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(2, 0)))) 
+                ) || (
+                    !gameBoard.get(findKey(new Coordinate(0, 1))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 1))).equals(gameBoard.get(findKey(new Coordinate(1, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 1))).equals(gameBoard.get(findKey(new Coordinate(2, 1))))
+                ) || (
+                    !gameBoard.get(findKey(new Coordinate(0, 2))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 2))).equals(gameBoard.get(findKey(new Coordinate(1, 2)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 2))).equals(gameBoard.get(findKey(new Coordinate(2, 2))))
+                )
+            ) || (
+                // ukos
+                (
+                    !gameBoard.get(findKey(new Coordinate(0, 0))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(1, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 0))).equals(gameBoard.get(findKey(new Coordinate(2, 2))))
+                ) || (
+                    !gameBoard.get(findKey(new Coordinate(0, 2))).equals(EMPTY) && 
+                    gameBoard.get(findKey(new Coordinate(0, 2))).equals(gameBoard.get(findKey(new Coordinate(1, 1)))) &&
+                    gameBoard.get(findKey(new Coordinate(0, 2))).equals(gameBoard.get(findKey(new Coordinate(2, 0))))
+                )
+            )
+        ) {
+            state = GameState.WIN;
+        }
+
+        return state;
+    }
+
+    public GameState set(Coordinate coord, Sign sign) throws GameFieldNotEmptyException {
+        Coordinate key = findKey(coord);
+        if(!gameBoard.get(key).equals(EMPTY)) {
+            throw new GameFieldNotEmptyException();
+        }
+        gameBoard.put(key, sign);
+
+        return check();
     }
 
     /**
